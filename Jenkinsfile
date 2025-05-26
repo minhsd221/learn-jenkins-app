@@ -42,7 +42,7 @@ pipeline {
                     }
                     post {
                         always {
-                            sh 'npm -l'
+                            sh 'echo "823"'
                         }
                     }
                 }
