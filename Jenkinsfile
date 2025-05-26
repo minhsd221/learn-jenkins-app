@@ -2,30 +2,31 @@ pipeline {
     agent any
 
     stages {
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             ls -la
-        //             node --version
-        //             npm --version
-        //             npm ci
-        //             npm run build
-        //             ls -la
-        //         '''
-        //     }
-        // }
+        /*
 
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
+        */
 
-
-        stage('Tests') {
+        stage('Do some shit') {
             parallel {
-                stage('Unit tests') {
+                stage('do sth with node - npm') {
                     agent {
                         docker {
                             image 'node:18-alpine'
@@ -35,39 +36,39 @@ pipeline {
 
                     steps {
                         sh '''
-                            #test -f build/index.html
-                            npm test
+                            node --version
+                            npm --version 
                         '''
                     }
                     post {
                         always {
-                            junit 'jest-results/junit.xml'
+                            sh 'npm -l'
                         }
                     }
                 }
-                stage('Unit tests 2') {
+
+                stage('do sth with python - pip') {
                     agent {
                         docker {
-                            image 'node:18-alpine'
+                            image 'python:3.11.5-alpine'
                             reuseNode true
                         }
                     }
 
                     steps {
                         sh '''
-                            #test -f build/index.html
-                            npm test
+                            python --version
+                            pip --version
                         '''
                     }
+
                     post {
                         always {
-                            junit 'jest-results/junit.xml'
+                            sh 'pip -h'
                         }
                     }
                 }
             }
         }
-
-
     }
 }
