@@ -7,26 +7,40 @@ pipeline {
     }
 
     stages {
-        
-        stage('Build') {
+
+        stage('AWS') {
             agent {
                 docker {
-                    image 'node:22-alpine'
-                    reuseNode true
+                    image 'amazon/awscli:2.27.22'
                 }
             }
             steps {
                 sh '''
-                    ls -la
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -la
+                    aws --version
                 '''
             }
+
+
         }
         
+        // stage('Build') {
+        //     agent {
+        //         docker {
+        //             image 'node:22-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         sh '''
+        //             ls -la
+        //             node --version
+        //             npm --version
+        //             npm ci
+        //             npm run build
+        //             ls -la
+        //         '''
+        //     }
+        // }
 
         // stage('Do some shit') {
         //     parallel {
@@ -75,24 +89,24 @@ pipeline {
         //     }
         // }
 
-        stage('Deploy') {
-            agent {
-                docker {
-                    image 'node:22-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    whoami
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-                '''
-            }
-        }        
+        // stage('Deploy') {
+        //     agent {
+        //         docker {
+        //             image 'node:22-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         sh '''
+        //             whoami
+        //             npm install netlify-cli
+        //             node_modules/.bin/netlify --version
+        //             echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
+        //             node_modules/.bin/netlify status
+        //             node_modules/.bin/netlify deploy --dir=build --prod --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+        //         '''
+        //     }
+        // }        
 
         
     }
