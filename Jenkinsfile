@@ -11,8 +11,8 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:22-alpine'
                     reuseNode true
+                    image 'node:22-alpine'
                 }
             }
             steps {
@@ -28,6 +28,7 @@ pipeline {
         stage('AWS') {
             agent {
                 docker {
+                    reuseNode true
                     image 'amazon/aws-cli:2.27.22'
                     args '--entrypoint=""'
                 }
