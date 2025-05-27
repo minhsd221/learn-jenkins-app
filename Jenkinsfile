@@ -8,6 +8,23 @@ pipeline {
 
     stages {
 
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    ls -la
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
+
         stage('AWS') {
             agent {
                 docker {
@@ -22,30 +39,13 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'aws-cli-credential', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         echo "GG S3!" > index.html
-                        aws s3 cp index.html $S3_BUCKET_ADDRESS/index.html
+                        aws s3 sync build $S3_BUCKET_ADDRESS
                     '''
                 }
             }
         }
         
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'node:22-alpine'
-        //             reuseNode true
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             ls -la
-        //             node --version
-        //             npm --version
-        //             npm ci
-        //             npm run build
-        //             ls -la
-        //         '''
-        //     }
-        // }
+
 
         // stage('Do some shit') {
         //     parallel {
